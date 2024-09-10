@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {data} from './data.js';
 import RestaurantCard from './RestaurantCard';
 import { ResMenu, ResName } from './Api/Api.js';
+import useOnlineStatus from './utils/useOnlineStatus.js';
 
 const Body = () => {
-
+  const [list, setList] = useState(data.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
+  const [filteredList, setFilteredList] = useState(list);
 
   const getName = async()=>{
       const res = await ResName();
@@ -13,7 +15,7 @@ const Body = () => {
   }
   const getMenu = async()=>{
     const res = await ResMenu();
-    console.log(res)
+    // console.log(res)
 }
   
 
@@ -23,11 +25,11 @@ const Body = () => {
   
   },[])
 
+  const online = useOnlineStatus()
 
-
-
-  const [list, setList] = useState(data.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-  const [filteredList, setFilteredList] = useState(list);
+ if(!online){
+  return <h1 className='text-3xl font-bold'>:Looks like you're offline please check your internet connection.</h1>
+ }
   return (
     <div className='m-20'>
      <h1 className='text-2xl mb-3 font-bold'>Top restaurant chains in Nagpur</h1>

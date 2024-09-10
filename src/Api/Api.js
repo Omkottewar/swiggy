@@ -17,10 +17,10 @@ export const ResName =  async()=>{
 }
 
 
-export const ResMenu =  async()=>{
+export const ResMenu =  async(id)=>{
 
     try{
-        const res = await axios.get(RestaurantMenu__BACKEND);
+        const res = await axios.get(RestaurantMenu__BACKEND+id);
         return (res)
     }catch (e){
         console.error(e);
