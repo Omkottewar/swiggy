@@ -3,6 +3,8 @@ import {data} from './data.js';
 import RestaurantCard from './RestaurantCard';
 import { ResMenu, ResName } from './Api/Api.js';
 import useOnlineStatus from './utils/useOnlineStatus.js';
+import { useContext } from 'react';
+import UserContext from './utils/UserContext.js';
 
 const Body = () => {
   const [list, setList] = useState(data.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
@@ -10,19 +12,16 @@ const Body = () => {
 
   const getName = async()=>{
       const res = await ResName();
-      console.log(res)
       setList(res)
   }
   const getMenu = async()=>{
     const res = await ResMenu();
     // console.log(res)
 }
-  
 
   useEffect(()=>{
     getName();
-    getMenu()
-  
+    getMenu();
   },[])
 
   const online = useOnlineStatus()

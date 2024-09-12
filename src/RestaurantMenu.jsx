@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DiscountCard from './DiscountCard';
-import Submenu from './Submenu';
 import { ResMenu } from './Api/Api';
 import useResInfo from './utils/useResInfo';
+import RestaurantCategory from './RestaurantCategory';
+import Shimmer from './Shimmer';
 
 const RestaurantMenu = () => {
+  const { id } = useParams(); 
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isFiltered, setIsFiltered] = useState(false);
   const [error, setError] = useState(null);
-  const { id } = useParams(); // Destructure the id directly
+  const [open,setOpen] = useState(0);
+// Destructure the id directly
 
   // Fetch restaurant menu data
   const getData = async () => {
+
     try {
       const res = await ResMenu(id);
       setMenu(res.data.data.cards);
+      console.log(res)
     } catch (e) {
       console.error('Error fetching menu:', e);
       setError('Failed to load menu');
@@ -29,13 +34,18 @@ const RestaurantMenu = () => {
     getData();
   }, [id]);
 
-
-  // const menu = useResInfo(id)
-
-  // Render loading or error states
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Shimmer/>;
   if (error) return <div>{error}</div>;
   if (!menu) return <div>No menu data available</div>;
+
+  // console.log(menu[3].groupedCard.cardGroupMap.REGULAR.cards)
+
+const category = menu[menu?.length-1]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter((c)=>c.card.card["@type"]==="type.googleapis.com/swiggy.presentation.food.v2.ItemCategory")
+
+
+
+
+
 
   return (
     <div className="w-[50vw] m-auto">
@@ -60,19 +70,14 @@ const RestaurantMenu = () => {
           </div>
         </>
       )}
-      
-      <button
-        onClick={() => setIsFiltered(!isFiltered)}
-        className="px-2 py-1 border-2 mt-4 border-black text-white font-bold bg-green-600 rounded-md"
-      >
-        Veg
-      </button>
-
-      {/* Render submenu items if available */}
-      {menu[menu.length - 1]?.groupedCard?.cardGroupMap?.REGULAR?.cards.map((item, index) => {
-        console.log(item.card.card?.itemCards)
-        return <Submenu key={index} data={item.card.card?.itemCards} filter={isFiltered} />;
-      })}
+        <div className="">
+          {category.map((type,index)=>{
+            return(
+              <RestaurantCategory setOpen={()=>setOpen(index)} 
+               open={index===open?true:false} key={index} data={type?.card?.card} index={index} />
+            )
+          })}
+        </div>
     </div>
   );
 };
