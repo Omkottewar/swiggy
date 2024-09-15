@@ -3,7 +3,6 @@ import Arrow from './assets/arrow.png'
 import ItemList from './ItemList'
 
 const RestaurantCategory = ({data ,open, setOpen,index}) => {
-    console.log(data)
     function handler(){
         setOpen()
     }

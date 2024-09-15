@@ -21,7 +21,6 @@ const RestaurantMenu = () => {
     try {
       const res = await ResMenu(id);
       setMenu(res.data.data.cards);
-      console.log(res)
     } catch (e) {
       console.error('Error fetching menu:', e);
       setError('Failed to load menu');
